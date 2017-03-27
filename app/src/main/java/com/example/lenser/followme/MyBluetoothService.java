@@ -1,8 +1,6 @@
 package com.example.lenser.followme;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,11 +22,10 @@ import BluetoothFunctions.ConnectedBT;
 public class MyBluetoothService extends AppCompatActivity {
 
     Button button, btSend;
-    TextView tvRcvText;
+    public static TextView tvRcvText;
     EditText etSendText;
     InputStream inputStream;
     OutputStream outputStream;
-    Thread workerThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,76 +38,31 @@ public class MyBluetoothService extends AppCompatActivity {
         etSendText = (EditText)findViewById(R.id.etSendText);
         etSendText.setText("");
 
+        //////////get IO stream
+        try {
+            inputStream = MainActivity.mmSocket.getInputStream();
+            outputStream = MainActivity.mmSocket.getOutputStream();
+        } catch (IOException e) {
+            Log.d("Service", "Error getting IO stream");
+        }
 
-        ConnectedBT bt = ConnectedBT.getIOStream();
-        inputStream = bt.getInputStream();
-        outputStream = bt.getOutputStream();
-///////////////get input and output stream
-//        try {
-//            inputStream = MainActivity.mmSocket.getInputStream();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            outputStream = MainActivity.mmSocket.getOutputStream();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-////////////
+        final ConnectedBT bt = new ConnectedBT(inputStream, outputStream, MyBluetoothService.this);
+        ///////////send message
         btSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String msg = etSendText.getText().toString();
-                ConnectedBT connectedBT = new ConnectedBT();
-                connectedBT.write(msg);
+                etSendText.setText("");
+                bt.write(msg);
             }
         });
-
-        workerThread = new Thread(new Runnable() {
-            final byte[] mmBuffer = new byte[1];
-
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        // Read from the InputStream.
-                        inputStream.read(mmBuffer);
-
-                        final String mess = new String(mmBuffer);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                tvRcvText.setText(mess);
-                                if (mess.compareTo("V") == 0){
-                                    Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
-                                    vibrator.vibrate(300);
-                                }
-                            }
-                        });
-                        Log.d("Service", "String: "+ mess);
-                        mmBuffer[0] = '\0';
-                    } catch (IOException e) {
-                        Log.d("Service", "Input stream was disconnected", e);
-                        break;
-                    }
-                }
-            }
-        });
-        workerThread.start();
-
-
+        ///////////read message
+        bt.start();
+        ///////////disconnect device
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MainActivity.mmSocket != null){
-                    try {
-                        MainActivity.mmSocket.close();
-                        finish();
-                    } catch (IOException e) {
-                        Log.d("Service", "Socket could not be closed");
-                        e.printStackTrace();
-                    }
-                }
+                bt.disconnect();
             }
         });
     }
