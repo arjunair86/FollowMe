@@ -5,22 +5,17 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.UUID;
+
+import BluetoothFunctions.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> adapter;
     ArrayList<BluetoothDevice> bluetoothDevices;
     ArrayList<String> deviceNames;
-    ProgressDialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,57 +64,9 @@ public class MainActivity extends AppCompatActivity {
         lvPairedDevices.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ConnectBT connectBT = new ConnectBT(bluetoothDevices.get(position));
+                ConnectBT connectBT = new ConnectBT(MainActivity.this, bluetoothDevices.get(position));
                 connectBT.execute();
             }
         });
-    }
-
-    public class ConnectBT extends AsyncTask<Void, Void, Void>{
-        BluetoothDevice bluetoothDevice;
-        private boolean connectSuccess = false;
-
-        public ConnectBT(BluetoothDevice bluetoothDevice) {
-            this.bluetoothDevice = bluetoothDevice;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = ProgressDialog.show(MainActivity.this, "Connecting...", "Please Wait...");
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-            BluetoothSocket tmp = null;
-            try {
-                tmp = bluetoothDevice.createRfcommSocketToServiceRecord(MY_UUID);
-                mmSocket = tmp;
-                mmSocket.connect();
-                connectSuccess = true;
-            } catch (IOException e) {
-                Log.d("Main", "doInBackground failed");
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressDialog.dismiss();
-            if(!connectSuccess){
-                Toast.makeText(getApplicationContext(), "Connection failed", Toast.LENGTH_SHORT).show();
-                finish();
-            } else {
-                Toast.makeText(MainActivity.this, "Connected", Toast.LENGTH_SHORT).show();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent intent = new Intent(MainActivity.this, MyBluetoothService.class);
-                        startActivity(intent);
-                    }
-                });
-            }
-        }
     }
 }

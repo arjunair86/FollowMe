@@ -1,4 +1,4 @@
-package com.example.lenser.followme;
+package BluetoothFunctions;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;

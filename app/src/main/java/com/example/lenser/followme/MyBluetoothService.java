@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import BluetoothFunctions.ConnectedBT;
+
 /**
  * Created by lenser on 3/6/17.
  */
@@ -40,28 +42,27 @@ public class MyBluetoothService extends AppCompatActivity {
         etSendText.setText("");
 
 
-        try {
-            inputStream = MainActivity.mmSocket.getInputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            outputStream = MainActivity.mmSocket.getOutputStream();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        ConnectedBT bt = ConnectedBT.getIOStream();
+        inputStream = bt.getInputStream();
+        outputStream = bt.getOutputStream();
+///////////////get input and output stream
+//        try {
+//            inputStream = MainActivity.mmSocket.getInputStream();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        try {
+//            outputStream = MainActivity.mmSocket.getOutputStream();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+////////////
         btSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String msg = etSendText.getText().toString();
-                msg+="\n";
-                try {
-                    outputStream.write(msg.getBytes());
-                    etSendText.setText("");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                ConnectedBT connectedBT = new ConnectedBT();
+                connectedBT.write(msg);
             }
         });
 
@@ -96,6 +97,7 @@ public class MyBluetoothService extends AppCompatActivity {
             }
         });
         workerThread.start();
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
