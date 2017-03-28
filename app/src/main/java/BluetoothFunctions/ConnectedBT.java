@@ -1,8 +1,15 @@
 package BluetoothFunctions;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.lenser.followme.MainActivity;
@@ -11,6 +18,8 @@ import com.example.lenser.followme.MyBluetoothService;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import Utils.Notify;
 
 /**
  * Created by lenser on 3/26/17.
@@ -46,12 +55,12 @@ public class ConnectedBT extends Thread {
 
                 final String mess = new String(mmBuffer);
                 activity.runOnUiThread(new Runnable() {
+                    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void run() {
                         MyBluetoothService.tvRcvText.setText(mess);
                         if (mess.compareTo("V") == 0){
-                            Vibrator vibrator = (Vibrator)activity.getSystemService(Context.VIBRATOR_SERVICE);
-                            vibrator.vibrate(300);
+                            Notify.notfy(activity);
                         }
                     }
                 });
