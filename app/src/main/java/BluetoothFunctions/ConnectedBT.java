@@ -37,7 +37,8 @@ public class ConnectedBT extends Thread {
     }
 
     public void write(String message){
-        message+='\n';
+//        message+='\n';
+        Log.d("ConnectectBT", "inside write");
         try {
             outputStream.write(message.getBytes());
         } catch (IOException e) {
@@ -58,7 +59,7 @@ public class ConnectedBT extends Thread {
                     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
                     @Override
                     public void run() {
-                        MyBluetoothService.tvRcvText.setText(mess);
+                        Log.d("ConnectectBT", "inside read");
                         if (mess.compareTo("V") == 0){
                             Notify.notfy(activity);
                         }
@@ -74,6 +75,7 @@ public class ConnectedBT extends Thread {
     }
 
     public void disconnect(){
+        Log.d("ConnectectBT", "disconnect");
         if(MainActivity.mmSocket != null){
             try {
                 MainActivity.mmSocket.close();

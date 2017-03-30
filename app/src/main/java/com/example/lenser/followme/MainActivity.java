@@ -1,22 +1,29 @@
 package com.example.lenser.followme;
 
-import android.app.ProgressDialog;
+import android.animation.Animator;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewAnimationUtils;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
-import BluetoothFunctions.*;
+import BluetoothFunctions.ConnectBT;
+import BluetoothFunctions.GetPairedDevices;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<BluetoothDevice> bluetoothDevices;
     ArrayList<String> deviceNames;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_main);
+
 
         Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
@@ -47,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 1);
         }
 //////////////////////////////LIST PAIRED DEVICES///////////////////////////////
+
         btPairedDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
