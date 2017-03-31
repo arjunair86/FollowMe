@@ -3,16 +3,13 @@ package com.example.lenser.followme;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,31 +17,37 @@ import java.io.OutputStream;
 
 import BluetoothFunctions.ConnectedBT;
 
+import static com.example.lenser.followme.MyBluetoothService.bt;
+import static com.example.lenser.followme.MyBluetoothService.downButton;
+import static com.example.lenser.followme.MyBluetoothService.isAuto;
+import static com.example.lenser.followme.MyBluetoothService.leftButton;
+import static com.example.lenser.followme.MyBluetoothService.rightButton;
+import static com.example.lenser.followme.MyBluetoothService.upButton;
+
 /**
  * Created by lenser on 3/6/17.
  */
 
 public class MyBluetoothService extends AppCompatActivity {
 
-    Button disconnect, upButton, downButton, leftButton, rightButton;
+    public static Button disconnect, upButton, downButton, leftButton, rightButton;
     InputStream inputStream;
     OutputStream outputStream;
     Switch aSwitch;
-    boolean isAuto = true;
+    public static boolean isAuto = true;
+    public static ConnectedBT bt;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_connected2);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_connected);
 
         disconnect = (Button)findViewById(R.id.disconnect);
         upButton = (Button)findViewById(R.id.upButton);
         downButton = (Button)findViewById(R.id.downButton);
         leftButton = (Button)findViewById(R.id.leftButton);
         downButton = (Button)findViewById(R.id.downButton);
+        rightButton = (Button)findViewById(R.id.rightButton);
 
         aSwitch = (Switch) findViewById(R.id.switch1);
 
@@ -56,7 +59,7 @@ public class MyBluetoothService extends AppCompatActivity {
         } catch (IOException e) {
             Log.d("Service", "Error getting IO stream");
         }
-        final ConnectedBT bt = new ConnectedBT(inputStream, outputStream, MyBluetoothService.this);
+        bt = new ConnectedBT(inputStream, outputStream, MyBluetoothService.this);
 
         bt.write("A".toString());
 
@@ -82,6 +85,50 @@ public class MyBluetoothService extends AppCompatActivity {
         });
 
         ///////////////////MOTOR CONTROLS
+            manualThread manualThread = new manualThread();
+        manualThread.start();
+        /////////////////disconnect device
+        disconnect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MainActivity.mmSocket != null){
+                    bt.write("B".toString());
+                    bt.disconnect();
+                }
+            }
+        });
+
+        /////////////////read message
+        bt.start();
+
+
+        /*
+        ///////////send message
+        btSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String msg = etSendText.getText().toString();
+                etSendText.setText("");
+                bt.write(msg);
+            }
+        });
+        ///////////read message
+        bt.start();
+        ///////////disconnect device
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bt.disconnect();
+            }
+        });
+    }
+*/
+    }
+}
+
+class manualThread extends Thread{
+    @Override
+    public void run() {
         if(!isAuto) {
             upButton.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -144,40 +191,5 @@ public class MyBluetoothService extends AppCompatActivity {
                 }
             });
         }
-        /////////////////disconnect device
-        disconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(MainActivity.mmSocket != null){
-                    bt.write("B".toString());
-                    bt.disconnect();
-                }
-            }
-        });
-        /////////////////read message
-        bt.start();
-
-
-        /*
-        ///////////send message
-        btSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String msg = etSendText.getText().toString();
-                etSendText.setText("");
-                bt.write(msg);
-            }
-        });
-        ///////////read message
-        bt.start();
-        ///////////disconnect device
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bt.disconnect();
-            }
-        });
-    }
-*/
     }
 }

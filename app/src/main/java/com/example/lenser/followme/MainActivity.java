@@ -40,9 +40,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
-        setSupportActionBar(toolbar);
         btPairedDevices = (Button)findViewById(R.id.btPairedDevices);
         lvPairedDevices = (ListView)findViewById(R.id.lvPairedDevices);
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
