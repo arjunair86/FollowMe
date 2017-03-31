@@ -101,28 +101,6 @@ public class MyBluetoothService extends AppCompatActivity {
         /////////////////read message
         bt.start();
 
-
-        /*
-        ///////////send message
-        btSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String msg = etSendText.getText().toString();
-                etSendText.setText("");
-                bt.write(msg);
-            }
-        });
-        ///////////read message
-        bt.start();
-        ///////////disconnect device
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bt.disconnect();
-            }
-        });
-    }
-*/
     }
 }
 
