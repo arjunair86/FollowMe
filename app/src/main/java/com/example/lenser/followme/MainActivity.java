@@ -1,24 +1,22 @@
 package com.example.lenser.followme;
 
-import android.animation.Animator;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewAnimationUtils;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -35,10 +33,19 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<BluetoothDevice> bluetoothDevices;
     ArrayList<String> deviceNames;
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimaryDark));
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.my_toolbar);
+        setSupportActionBar(toolbar);
 
         btPairedDevices = (Button)findViewById(R.id.btPairedDevices);
         lvPairedDevices = (ListView)findViewById(R.id.lvPairedDevices);
@@ -62,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 bluetoothDevices = getPairedDevices.showPairedDevices();
                 deviceNames = new ArrayList<String>();
                 for(BluetoothDevice device: bluetoothDevices){
-                    deviceNames.add(device.getName()+"\n"+device.getAddress());
+                    if(device.getName().contains("HC")){
+                        deviceNames.add("  "+device.getName()+"\n"+"  "+device.getAddress());
+                    }
                 }
                 adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.list_item_black, deviceNames);
                 lvPairedDevices.setAdapter(adapter);
