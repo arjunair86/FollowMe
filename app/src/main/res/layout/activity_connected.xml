@@ -22,17 +22,10 @@
         android:layout_below="@+id/connected_toolbar"
         android:text="Switch" />
 
-    <Button
-        android:id="@+id/disconnect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/switch1"
-        android:text="Disconnect" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/disconnect"
+        android:layout_below="@+id/switch1"
         android:id="@+id/relativeLayoutForAuto">
 
         <TextView
@@ -49,7 +42,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/disconnect"
+        android:layout_below="@+id/switch1"
         android:id="@+id/relativeLayoutForManual"
         android:visibility="invisible">
 

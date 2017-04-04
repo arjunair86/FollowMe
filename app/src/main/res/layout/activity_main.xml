@@ -16,18 +16,11 @@
         local:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         local:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-    <Button
-        android:text="Show paired devices"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btPairedDevices"
-        android:layout_below="@id/my_toolbar"
-        android:layout_centerHorizontal="true"/>
-
     <ListView
-        android:layout_below="@id/btPairedDevices"
+        android:layout_below="@id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/lvPairedDevices" />
+        android:id="@+id/lvPairedDevices"
+        android:padding="4sp"/>
 
 </RelativeLayout>

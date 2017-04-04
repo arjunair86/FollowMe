@@ -1,15 +1,19 @@
 package com.example.lenser.followme;
 
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
@@ -18,8 +22,10 @@ import android.widget.Switch;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 
 import BluetoothFunctions.ConnectedBT;
+import BluetoothFunctions.GetPairedDevices;
 
 import static com.example.lenser.followme.MyBluetoothService.bt;
 import static com.example.lenser.followme.MyBluetoothService.downButton;
@@ -97,22 +103,30 @@ public class MyBluetoothService extends AppCompatActivity {
         });
 
         ///////////////////MOTOR CONTROLS
-            manualThread manualThread = new manualThread();
+        manualThread manualThread = new manualThread();
         manualThread.start();
-        /////////////////disconnect device
-        disconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(MainActivity.mmSocket != null){
-                    bt.write("B".toString());
-                    bt.disconnect();
-                }
-            }
-        });
-
         /////////////////read message
         bt.start();
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        //////////////inflate menu
+        getMenuInflater().inflate(R.menu.menu_connected, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.disconnect){
+            if(MainActivity.mmSocket != null){
+                bt.write("B".toString());
+                bt.disconnect();
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 
