@@ -47,14 +47,15 @@
         android:visibility="invisible">
 
 
-        <Button
+        <ImageButton
             android:id="@+id/upButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:background="@mipmap/up"
             android:text="UP"/>
 
-        <Button
+        <ImageButton
             android:id="@+id/leftButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,9 +64,10 @@
             android:layout_marginLeft="55dp"
             android:layout_marginStart="55dp"
             android:layout_marginTop="73dp"
+            android:background="@mipmap/left"
             android:text="Left" />
 
-        <Button
+        <ImageButton
             android:id="@+id/rightButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,15 +76,17 @@
             android:layout_alignTop="@+id/leftButton"
             android:layout_marginEnd="40dp"
             android:layout_marginRight="40dp"
+            android:background="@mipmap/right"
             android:text="Right" />
 
-        <Button
+        <ImageButton
             android:id="@+id/downButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/rightButton"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="33dp"
+            android:background="@mipmap/down"
             android:text="Down" />
 
     </RelativeLayout>
